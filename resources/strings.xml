@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string id="appName">Throw Velocity</string>
+    <string id="maxLabel">Max:</string>
+    <string id="lastThrowsLabel">Last 5</string>
+    <string id="resetMessage">Reset!</string>
+</resources>
