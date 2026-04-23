@@ -1,0 +1,10 @@
+# Garmin / Monkey C build artifacts
+bin/
+build/
+derived/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
