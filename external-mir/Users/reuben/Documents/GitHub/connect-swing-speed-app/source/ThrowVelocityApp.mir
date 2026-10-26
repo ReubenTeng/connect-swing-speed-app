@@ -1,0 +1,68 @@
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Application,1,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 4; @symbol_classdef = [ThrowVelocityApp,4,6,22]; @symbol_extends<0> = [Application,4,31,42]; @symbol_extends<1> = [AppBase,4,43,50]; ]
+class ThrowVelocityApp extends Application.AppBase {
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 6; @symbol_functiondef = [initialize,6,13,23]; ]
+    function initialize() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_6_26_8_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc" 7 8 ]
+        symbol [ AppBase %tmp.2 7 8 15 ];
+        %tmp.2 = getv ? :AppBase;
+        symbol [ initialize %tmp.3 7 16 26 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_6_26_8_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 10; @symbol_functiondef = [getInitialView,10,13,27]; ]
+    function getInitialView() {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_10_30_13_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc" 11 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_10_30_13_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_10_30_13_4_stop" ]
+        %view.1 = local;
+        symbol [ view %view.1 11 12 16 ];
+        symbol [ ThrowVelocityView %tmp.4 11 23 40 ];
+        %tmp.4 = getv ? :ThrowVelocityView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %view.1 %tmp.1;
+        symbol [ view %view.1 11 12 16 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc" 12 8 ]
+        %tmp.5 = newa 2;
+        %tmp.6 = lgetv %view.1;
+        symbol [ view %tmp.6 12 17 21 ];
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 0 %tmp.6;
+        symbol [ ThrowVelocityDelegate %tmp.12 12 27 48 ];
+        %tmp.12 = getv ? :ThrowVelocityDelegate;
+        %tmp.13 = lgetv %view.1;
+        symbol [ view %tmp.13 12 49 53 ];
+        %tmp.9 = newc %tmp.12 (%tmp.13);
+        %tmp.14 = dup %tmp.8;
+        %tmp.15 = aputv %tmp.14 1 %tmp.9;
+        ret %tmp.15;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_10_30_13_4_stop:
+    }
+}
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 16; @symbol_functiondef = [getApp,16,9,15]; ]
+function getApp() {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_16_18_18_0_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc" 17 4 ]
+    symbol [ Application %tmp.1 17 11 22 ];
+    %tmp.1 = getm $.Toybox.Application;
+    symbol [ getApp %tmp.2 17 23 29 ];
+    %tmp.2 = getv function %tmp.1 :getApp;
+    %tmp.3 = invoke %tmp.1 %tmp.2();
+    ret %tmp.3;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityApp_mc_16_18_18_0_stop:
+}
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityApp.mc"; @line = 1; ]
+<init> {
+}

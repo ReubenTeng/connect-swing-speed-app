@@ -1,0 +1,49 @@
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Lang,2,14,18]; ]
+import Toybox.Lang;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 4; @symbol_classdef = [ThrowVelocityDelegate,4,6,27]; @symbol_extends<0> = [WatchUi,4,36,43]; @symbol_extends<1> = [InputDelegate,4,44,57]; ]
+class ThrowVelocityDelegate extends WatchUi.InputDelegate {
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 6; @position = 8; @symbol_vardef = [_view,6,8,13]; @symbol_type<0> = [ThrowVelocityView,6,17,34]; ]
+    var _view as ThrowVelocityView;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 8; @symbol_functiondef = [initialize,8,13,23]; @symbol_param<0> = [view,8,24,28]; @symbol_param<0>_type<0> = [ThrowVelocityView,8,32,49]; ]
+    function initialize(view as ThrowVelocityView) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityDelegate_mc_8_51_11_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc" 9 8 ]
+        symbol [ InputDelegate %tmp.2 9 8 21 ];
+        %tmp.2 = getv ? :InputDelegate;
+        symbol [ initialize %tmp.3 9 22 32 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc" 10 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 10 16 20 ];
+        symbol [ _view ? 10 8 13 ];
+        putv self :_view %tmp.4;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityDelegate_mc_8_51_11_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 13; @symbol_functiondef = [onSelect,13,13,21]; @symbol_return<0> = [Boolean,13,27,34]; ]
+    function onSelect() as Boolean {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityDelegate_mc_13_35_16_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc" 14 8 ]
+        symbol [ _view %tmp.2 14 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ resetStats %tmp.3 14 14 24 ];
+        %tmp.3 = getv function %tmp.2 :resetStats;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc" 15 8 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityDelegate_mc_13_35_16_4_stop:
+    }
+}
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityDelegate.mc"; @line = 1; ]
+<init> {
+}

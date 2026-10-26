@@ -1,0 +1,2149 @@
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Graphics,1,14,22]; ]
+import Toybox.Graphics;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Lang,2,14,18]; ]
+import Toybox.Lang;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Math,3,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Sensor,4,13,19]; ]
+using Toybox.Sensor;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [System,5,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Timer,6,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [WatchUi,7,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 9; @symbol_classdef = [ThrowVelocityView,9,6,23]; @symbol_extends<0> = [WatchUi,9,32,39]; @symbol_extends<1> = [View,9,40,44]; ]
+class ThrowVelocityView extends WatchUi.View {
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 9; ]
+    <init> {
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 19 8 ]
+        symbol [ DEFAULT_SAMPLE_HZ %tmp.2 19 34 51 ];
+        %tmp.2 = getv ? :DEFAULT_SAMPLE_HZ;
+        putv self :_sampleRateHz %tmp.2;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 22 8 ]
+        symbol [ DEFAULT_SAMPLE_HZ %tmp.4 22 37 54 ];
+        %tmp.4 = getv ? :DEFAULT_SAMPLE_HZ;
+        %tmp.5 = 2;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        putv self :_maxThrowSamples %tmp.6;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 29 8 ]
+        %tmp.7 = newa 0;
+        putv self :_lastThrows %tmp.7;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 38 8 ]
+        symbol [ Timer %tmp.10 38 43 48 ];
+        %tmp.10 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.11 38 49 54 ];
+        %tmp.11 = getv function ? %tmp.10 :Timer;
+        %tmp.8 = newc %tmp.11 ();
+        putv self :_refreshTimer %tmp.8;
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 9; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 11; @position = 10; @symbol_constdef = [DEFAULT_SAMPLE_HZ,11,10,27]; ]
+    const DEFAULT_SAMPLE_HZ = 25;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 14; @position = 10; @symbol_constdef = [BASE_INTERCEPT_MS,14,10,27]; ]
+    const BASE_INTERCEPT_MS = -4.9;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 15; @position = 10; @symbol_constdef = [BASE_LOG_PEAK_COEFFICIENT,15,10,35]; ]
+    const BASE_LOG_PEAK_COEFFICIENT = 6.4;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 16; @position = 10; @symbol_constdef = [GRAVITY_MS2,16,10,21]; ]
+    const GRAVITY_MS2 = 9.81;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 17; @position = 10; @symbol_constdef = [START_THRESHOLD_MS2,17,10,29]; ]
+    const START_THRESHOLD_MS2 = 3.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 18; @position = 10; @symbol_constdef = [END_THRESHOLD_MS2,18,10,27]; ]
+    const END_THRESHOLD_MS2 = 1.5;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 19; @position = 8; @symbol_vardef = [_sampleRateHz,19,8,21]; @symbol_type<0> = [Number,19,25,31]; ]
+    var _sampleRateHz as Number;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 20; @position = 8; @symbol_vardef = [_startSamples,20,8,21]; @symbol_type<0> = [Number,20,25,31]; ]
+    var _startSamples as Number = 2;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 21; @position = 8; @symbol_vardef = [_endSamples,21,8,19]; @symbol_type<0> = [Number,21,23,29]; ]
+    var _endSamples as Number = 3;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 22; @position = 8; @symbol_vardef = [_maxThrowSamples,22,8,24]; @symbol_type<0> = [Number,22,28,34]; ]
+    var _maxThrowSamples as Number;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 23; @position = 10; @symbol_constdef = [SENSOR_TIMEOUT_MS,23,10,27]; ]
+    const SENSOR_TIMEOUT_MS = 4000;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 24; @position = 10; @symbol_constdef = [RESET_MESSAGE_DURATION_MS,24,10,35]; ]
+    const RESET_MESSAGE_DURATION_MS = 1000;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 26; @position = 8; @symbol_vardef = [_lastThrowKmh,26,8,21]; @symbol_type<0> = [Float,26,25,30]; ]
+    var _lastThrowKmh as Float = 0.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 27; @position = 8; @symbol_vardef = [_lastThrowMph,27,8,21]; @symbol_type<0> = [Float,27,25,30]; ]
+    var _lastThrowMph as Float = 0.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 28; @position = 8; @symbol_vardef = [_maxThrowKmh,28,8,20]; @symbol_type<0> = [Float,28,24,29]; ]
+    var _maxThrowKmh as Float = 0.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 29; @position = 8; @symbol_vardef = [_lastThrows,29,8,19]; @symbol_type<0> = [Array,29,23,28]; @symbol_type<1> = [Float,29,29,34]; ]
+    var _lastThrows as Array<Float>;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 31; @position = 8; @symbol_vardef = [_isThrowing,31,8,19]; @symbol_type<0> = [Boolean,31,23,30]; ]
+    var _isThrowing as Boolean = false;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 32; @position = 8; @symbol_vardef = [_peakAccelerationG,32,8,26]; @symbol_type<0> = [Float,32,30,35]; ]
+    var _peakAccelerationG as Float = 0.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 33; @position = 8; @symbol_vardef = [_candidatePeakG,33,8,23]; @symbol_type<0> = [Float,33,27,32]; ]
+    var _candidatePeakG as Float = 0.0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 34; @position = 8; @symbol_vardef = [_throwSampleCount,34,8,25]; @symbol_type<0> = [Number,34,29,35]; ]
+    var _throwSampleCount as Number = 0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 35; @position = 8; @symbol_vardef = [_waitingForRest,35,8,23]; @symbol_type<0> = [Boolean,35,27,34]; ]
+    var _waitingForRest as Boolean = false;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 36; @position = 8; @symbol_vardef = [_lastSensorUpdateMs,36,8,27]; @symbol_type<0> = [Number,36,31,37]; ]
+    var _lastSensorUpdateMs as Number or Null = null;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 37; @position = 8; @symbol_vardef = [_sensorError,37,8,20]; @symbol_type<0> = [Boolean,37,24,31]; ]
+    var _sensorError as Boolean = false;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 38; @position = 8; @symbol_vardef = [_refreshTimer,38,8,21]; @symbol_type<0> = [Timer,38,25,30]; @symbol_type<1> = [Timer,38,31,36]; ]
+    var _refreshTimer as Timer.Timer;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 40; @position = 8; @symbol_vardef = [_startCount,40,8,19]; @symbol_type<0> = [Number,40,23,29]; ]
+    var _startCount as Number = 0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 41; @position = 8; @symbol_vardef = [_endCount,41,8,17]; @symbol_type<0> = [Number,41,21,27]; ]
+    var _endCount as Number = 0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 43; @position = 8; @symbol_vardef = [_showResetMessage,43,8,25]; @symbol_type<0> = [Boolean,43,29,36]; ]
+    var _showResetMessage as Boolean = false;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 44; @position = 8; @symbol_vardef = [_resetMessageUntilMs,44,8,28]; @symbol_type<0> = [Number,44,32,38]; ]
+    var _resetMessageUntilMs as Number = 0;
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 46; @symbol_functiondef = [initialize,46,13,23]; ]
+    function initialize() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_46_26_48_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 47 8 ]
+        symbol [ View %tmp.2 47 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 47 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_46_26_48_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 50; @symbol_functiondef = [onLayout,50,13,21]; @symbol_param<0> = [dc,50,22,24]; @symbol_param<0>_type<0> = [Dc,50,28,30]; ]
+    function onLayout(dc as Dc) as Void {
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 53; @symbol_functiondef = [onShow,53,13,19]; ]
+    function onShow() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_53_30_56_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 54 8 ]
+        %tmp.1 = self;
+        symbol [ _startSensorListener %tmp.2 54 8 28 ];
+        %tmp.2 = getv function %tmp.1 :_startSensorListener;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 55 8 ]
+        symbol [ _refreshTimer %tmp.4 55 8 21 ];
+        %tmp.4 = getv ? :_refreshTimer;
+        symbol [ start %tmp.5 55 22 27 ];
+        %tmp.5 = getv function %tmp.4 :start;
+        %tmp.6 = self;
+        symbol [ method %tmp.7 55 28 34 ];
+        %tmp.7 = getv function %tmp.6 :method;
+        %tmp.9 = const :_refresh;
+        symbol [ _refresh %tmp.9 55 36 44 const ];
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.9);
+        %tmp.11 = 1000;
+        %tmp.12 = true;
+        invoke %tmp.4 %tmp.5(%tmp.10, %tmp.11, %tmp.12);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_53_30_56_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 58; @symbol_functiondef = [onHide,58,13,19]; ]
+    function onHide() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_58_30_62_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 59 8 ]
+        symbol [ _refreshTimer %tmp.2 59 8 21 ];
+        %tmp.2 = getv ? :_refreshTimer;
+        symbol [ stop %tmp.3 59 22 26 ];
+        %tmp.3 = getv function %tmp.2 :stop;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 60 8 ]
+        symbol [ Sensor %tmp.4 60 8 14 ];
+        %tmp.4 = getm $.Toybox.Sensor;
+        symbol [ unregisterSensorDataListener %tmp.5 60 15 43 ];
+        %tmp.5 = getv function %tmp.4 :unregisterSensorDataListener;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 61 8 ]
+        %tmp.6 = self;
+        symbol [ _resetDetection %tmp.7 61 8 23 ];
+        %tmp.7 = getv function %tmp.6 :_resetDetection;
+        invoke %tmp.6 %tmp.7();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_58_30_62_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 64; @symbol_functiondef = [_refresh,64,13,21]; ]
+    function _refresh() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_64_32_66_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 65 8 ]
+        symbol [ WatchUi %tmp.1 65 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.2 65 16 29 ];
+        %tmp.2 = getv function %tmp.1 :requestUpdate;
+        invoke %tmp.1 %tmp.2();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_64_32_66_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 68; @symbol_functiondef = [onUpdate,68,13,21]; @symbol_param<0> = [dc,68,22,24]; @symbol_param<0>_type<0> = [Dc,68,28,30]; ]
+    function onUpdate(dc as Dc) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 69 8 ]
+        %tmp.1 = self;
+        symbol [ _updateResetMessageState %tmp.2 69 8 32 ];
+        %tmp.2 = getv function %tmp.1 :_updateResetMessageState;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 71 8 ]
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 71 8 10 ];
+        symbol [ setColor %tmp.4 71 11 19 ];
+        %tmp.4 = getv function %tmp.3 :setColor;
+        symbol [ Graphics %tmp.5 71 20 28 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.6 71 29 40 ];
+        %tmp.6 = getv %tmp.5 :COLOR_WHITE;
+        symbol [ Graphics %tmp.7 71 42 50 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.8 71 51 62 ];
+        %tmp.8 = getv %tmp.7 :COLOR_BLACK;
+        invoke %tmp.3 %tmp.4(%tmp.6, %tmp.8);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 72 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 72 8 10 ];
+        symbol [ clear %tmp.10 72 11 16 ];
+        %tmp.10 = getv function %tmp.9 :clear;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 73 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %width.1 = local;
+        symbol [ width %width.1 73 12 17 ];
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 73 20 22 ];
+        symbol [ getWidth %tmp.12 73 23 31 ];
+        %tmp.12 = getv function %tmp.11 :getWidth;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        lputv %width.1 %tmp.13;
+        symbol [ width %width.1 73 12 17 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 74 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %height.2 = local;
+        symbol [ height %height.2 74 12 18 ];
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 74 21 23 ];
+        symbol [ getHeight %tmp.15 74 24 33 ];
+        %tmp.15 = getv function %tmp.14 :getHeight;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        lputv %height.2 %tmp.16;
+        symbol [ height %height.2 74 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 76 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %centerX.3 = local;
+        symbol [ centerX %centerX.3 76 12 19 ];
+        %tmp.17 = lgetv %width.1;
+        symbol [ width %tmp.17 76 22 27 ];
+        %tmp.18 = 2;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        lputv %centerX.3 %tmp.19;
+        symbol [ centerX %centerX.3 76 12 19 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 77 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %accent.4 = local;
+        symbol [ accent %accent.4 77 12 18 ];
+        %tmp.20 = 0xA8EF4D;
+        lputv %accent.4 %tmp.20;
+        symbol [ accent %accent.4 77 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 78 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %muted.5 = local;
+        symbol [ muted %muted.5 78 12 17 ];
+        %tmp.21 = 0x999999;
+        lputv %muted.5 %tmp.21;
+        symbol [ muted %muted.5 78 12 17 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 79 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %centered.6 = local;
+        symbol [ centered %centered.6 79 12 20 ];
+        symbol [ Graphics %tmp.22 79 23 31 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.23 79 32 51 ];
+        %tmp.23 = getv %tmp.22 :TEXT_JUSTIFY_CENTER;
+        symbol [ Graphics %tmp.24 79 54 62 ];
+        %tmp.24 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.25 79 63 83 ];
+        %tmp.25 = getv %tmp.24 :TEXT_JUSTIFY_VCENTER;
+        %tmp.26 = bitor %tmp.23 %tmp.25;
+        lputv %centered.6 %tmp.26;
+        symbol [ centered %centered.6 79 12 20 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 80 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %status.7 = local;
+        symbol [ status %status.7 80 12 18 ];
+        %tmp.27 = "EXPERIMENTAL";
+        lputv %status.7 %tmp.27;
+        symbol [ status %status.7 80 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 81 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_stmt:
+        symbol [ _sensorError %tmp.29 81 12 24 ];
+        %tmp.29 = getv ? :_sensorError;
+        bf %tmp.29 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_26_83_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 82 12 ]
+        %tmp.30 = "SENSOR ERROR";
+        lputv %status.7 %tmp.30;
+        symbol [ status %status.7 82 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_26_83_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_false:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 83 15 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_stmt:
+        symbol [ _lastSensorUpdateMs %tmp.32 83 19 38 ];
+        %tmp.32 = getv ? :_lastSensorUpdateMs;
+        %tmp.33 = null;
+        %tmp.34 = eq %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_48_85_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 84 12 ]
+        %tmp.35 = "WAITING";
+        lputv %status.7 %tmp.35;
+        symbol [ status %status.7 84 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_48_85_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_false:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 85 15 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_stmt:
+        symbol [ System %tmp.36 85 19 25 ];
+        %tmp.36 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.37 85 26 34 ];
+        %tmp.37 = getv function %tmp.36 :getTimer;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        symbol [ _lastSensorUpdateMs %tmp.40 85 39 58 ];
+        %tmp.40 = getv ? :_lastSensorUpdateMs;
+        %tmp.41 = sub %tmp.38 %tmp.40;
+        symbol [ SENSOR_TIMEOUT_MS %tmp.43 85 61 78 ];
+        %tmp.43 = getv ? :SENSOR_TIMEOUT_MS;
+        %tmp.44 = gt %tmp.41 %tmp.43;
+        bf %tmp.44 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_80_87_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 86 12 ]
+        %tmp.45 = "NO SENSOR DATA";
+        lputv %status.7 %tmp.45;
+        symbol [ status %status.7 86 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_80_87_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_false:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 87 15 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_stmt:
+        symbol [ _showResetMessage %tmp.47 87 19 36 ];
+        %tmp.47 = getv ? :_showResetMessage;
+        bf %tmp.47 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_38_89_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 88 12 ]
+        %tmp.48 = "RESET";
+        lputv %status.7 %tmp.48;
+        symbol [ status %status.7 88 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_38_89_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_false:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 89 15 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_15_91_8_if_stmt:
+        symbol [ _isThrowing %tmp.50 89 19 30 ];
+        %tmp.50 = getv ? :_isThrowing;
+        bf %tmp.50 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_15_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_15_91_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_32_91_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 90 12 ]
+        %tmp.51 = "MEASURING";
+        lputv %status.7 %tmp.51;
+        symbol [ status %status.7 90 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_32_91_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_15_91_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_89_15_91_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_87_15_91_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_85_15_91_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_83_15_91_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_81_8_91_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 93 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 93 8 10 ];
+        symbol [ setColor %tmp.53 93 11 19 ];
+        %tmp.53 = getv function %tmp.52 :setColor;
+        %tmp.54 = lgetv %accent.4;
+        symbol [ accent %tmp.54 93 20 26 ];
+        symbol [ Graphics %tmp.55 93 28 36 ];
+        %tmp.55 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.56 93 37 54 ];
+        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
+        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.56);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 94 8 ]
+        %tmp.57 = self;
+        symbol [ _drawSmallText %tmp.58 94 8 22 ];
+        %tmp.58 = getv function %tmp.57 :_drawSmallText;
+        %tmp.59 = lgetv %dc;
+        symbol [ dc %tmp.59 94 23 25 ];
+        %tmp.60 = lgetv %status.7;
+        symbol [ status %tmp.60 94 27 33 ];
+        %tmp.61 = lgetv %centerX.3;
+        symbol [ centerX %tmp.61 94 35 42 ];
+        %tmp.62 = lgetv %height.2;
+        symbol [ height %tmp.62 94 44 50 ];
+        %tmp.63 = 0.16;
+        %tmp.64 = mul %tmp.62 %tmp.63;
+        %tmp.65 = lgetv %width.1;
+        symbol [ width %tmp.65 94 59 64 ];
+        %tmp.66 = 0.68;
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61, %tmp.64, %tmp.67);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 97 8 ]
+        %tmp.68 = lgetv %dc;
+        symbol [ dc %tmp.68 97 8 10 ];
+        symbol [ setColor %tmp.69 97 11 19 ];
+        %tmp.69 = getv function %tmp.68 :setColor;
+        symbol [ Graphics %tmp.70 97 20 28 ];
+        %tmp.70 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.71 97 29 40 ];
+        %tmp.71 = getv %tmp.70 :COLOR_WHITE;
+        symbol [ Graphics %tmp.72 97 42 50 ];
+        %tmp.72 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.73 97 51 68 ];
+        %tmp.73 = getv %tmp.72 :COLOR_TRANSPARENT;
+        invoke %tmp.68 %tmp.69(%tmp.71, %tmp.73);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 98 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %displayKmh.8 = local;
+        symbol [ displayKmh %displayKmh.8 98 12 22 ];
+        %tmp.74 = self;
+        symbol [ _getDisplayKmh %tmp.75 98 25 39 ];
+        %tmp.75 = getv function %tmp.74 :_getDisplayKmh;
+        %tmp.76 = invoke %tmp.74 %tmp.75();
+        lputv %displayKmh.8 %tmp.76;
+        symbol [ displayKmh %displayKmh.8 98 12 22 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 99 8 ]
+        %tmp.77 = self;
+        symbol [ _drawSpeed %tmp.78 99 8 18 ];
+        %tmp.78 = getv function %tmp.77 :_drawSpeed;
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 99 19 21 ];
+        %tmp.80 = self;
+        symbol [ _formatOneDecimal %tmp.81 99 23 40 ];
+        %tmp.81 = getv function %tmp.80 :_formatOneDecimal;
+        %tmp.82 = lgetv %displayKmh.8;
+        symbol [ displayKmh %tmp.82 99 41 51 ];
+        %tmp.83 = invoke %tmp.80 %tmp.81(%tmp.82);
+        %tmp.84 = lgetv %centerX.3;
+        symbol [ centerX %tmp.84 99 54 61 ];
+        %tmp.85 = lgetv %height.2;
+        symbol [ height %tmp.85 99 63 69 ];
+        %tmp.86 = 0.35;
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = lgetv %width.1;
+        symbol [ width %tmp.88 100 12 17 ];
+        %tmp.89 = 0.74;
+        %tmp.90 = mul %tmp.88 %tmp.89;
+        %tmp.91 = lgetv %height.2;
+        symbol [ height %tmp.91 100 26 32 ];
+        %tmp.92 = 0.26;
+        %tmp.93 = mul %tmp.91 %tmp.92;
+        invoke %tmp.77 %tmp.78(%tmp.79, %tmp.83, %tmp.84, %tmp.87, %tmp.90, %tmp.93);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 102 8 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 102 8 10 ];
+        symbol [ setColor %tmp.95 102 11 19 ];
+        %tmp.95 = getv function %tmp.94 :setColor;
+        %tmp.96 = lgetv %accent.4;
+        symbol [ accent %tmp.96 102 20 26 ];
+        symbol [ Graphics %tmp.97 102 28 36 ];
+        %tmp.97 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.98 102 37 54 ];
+        %tmp.98 = getv %tmp.97 :COLOR_TRANSPARENT;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.98);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 103 8 ]
+        %tmp.99 = lgetv %dc;
+        symbol [ dc %tmp.99 103 8 10 ];
+        symbol [ drawText %tmp.100 103 11 19 ];
+        %tmp.100 = getv function %tmp.99 :drawText;
+        %tmp.101 = lgetv %centerX.3;
+        symbol [ centerX %tmp.101 103 20 27 ];
+        %tmp.102 = lgetv %height.2;
+        symbol [ height %tmp.102 103 29 35 ];
+        %tmp.103 = 0.50;
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        symbol [ Graphics %tmp.105 103 44 52 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.106 103 53 63 ];
+        %tmp.106 = getv %tmp.105 :FONT_SMALL;
+        %tmp.107 = "km/h EST.";
+        %tmp.108 = lgetv %centered.6;
+        symbol [ centered %tmp.108 103 78 86 ];
+        invoke %tmp.99 %tmp.100(%tmp.101, %tmp.104, %tmp.106, %tmp.107, %tmp.108);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 104 8 ]
+        %tmp.109 = lgetv %dc;
+        symbol [ dc %tmp.109 104 8 10 ];
+        symbol [ setColor %tmp.110 104 11 19 ];
+        %tmp.110 = getv function %tmp.109 :setColor;
+        %tmp.111 = lgetv %muted.5;
+        symbol [ muted %tmp.111 104 20 25 ];
+        symbol [ Graphics %tmp.112 104 27 35 ];
+        %tmp.112 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.113 104 36 53 ];
+        %tmp.113 = getv %tmp.112 :COLOR_TRANSPARENT;
+        invoke %tmp.109 %tmp.110(%tmp.111, %tmp.113);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 105 8 ]
+        %tmp.114 = lgetv %dc;
+        symbol [ dc %tmp.114 105 8 10 ];
+        symbol [ drawText %tmp.115 105 11 19 ];
+        %tmp.115 = getv function %tmp.114 :drawText;
+        %tmp.116 = lgetv %centerX.3;
+        symbol [ centerX %tmp.116 105 20 27 ];
+        %tmp.117 = lgetv %height.2;
+        symbol [ height %tmp.117 105 29 35 ];
+        %tmp.118 = 0.59;
+        %tmp.119 = mul %tmp.117 %tmp.118;
+        symbol [ Graphics %tmp.120 105 44 52 ];
+        %tmp.120 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.121 105 53 63 ];
+        %tmp.121 = getv %tmp.120 :FONT_XTINY;
+        %tmp.122 = self;
+        symbol [ _formatOneDecimal %tmp.123 106 12 29 ];
+        %tmp.123 = getv function %tmp.122 :_formatOneDecimal;
+        %tmp.124 = lgetv %displayKmh.8;
+        symbol [ displayKmh %tmp.124 106 30 40 ];
+        %tmp.125 = 1.609344;
+        %tmp.126 = div %tmp.124 %tmp.125;
+        %tmp.127 = invoke %tmp.122 %tmp.123(%tmp.126);
+        %tmp.128 = " mph";
+        %tmp.129 = add %tmp.127 %tmp.128;
+        %tmp.130 = lgetv %centered.6;
+        symbol [ centered %tmp.130 106 63 71 ];
+        invoke %tmp.114 %tmp.115(%tmp.116, %tmp.119, %tmp.121, %tmp.129, %tmp.130);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 108 8 ]
+        %tmp.131 = lgetv %dc;
+        symbol [ dc %tmp.131 108 8 10 ];
+        symbol [ setColor %tmp.132 108 11 19 ];
+        %tmp.132 = getv function %tmp.131 :setColor;
+        %tmp.133 = 0x333333;
+        symbol [ Graphics %tmp.134 108 30 38 ];
+        %tmp.134 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.135 108 39 56 ];
+        %tmp.135 = getv %tmp.134 :COLOR_TRANSPARENT;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.135);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 109 8 ]
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 109 8 10 ];
+        symbol [ drawLine %tmp.137 109 11 19 ];
+        %tmp.137 = getv function %tmp.136 :drawLine;
+        %tmp.138 = lgetv %width.1;
+        symbol [ width %tmp.138 109 20 25 ];
+        %tmp.139 = 0.23;
+        %tmp.140 = mul %tmp.138 %tmp.139;
+        %tmp.141 = lgetv %height.2;
+        symbol [ height %tmp.141 109 34 40 ];
+        %tmp.142 = 0.66;
+        %tmp.143 = mul %tmp.141 %tmp.142;
+        %tmp.144 = lgetv %width.1;
+        symbol [ width %tmp.144 109 49 54 ];
+        %tmp.145 = 0.77;
+        %tmp.146 = mul %tmp.144 %tmp.145;
+        %tmp.147 = lgetv %height.2;
+        symbol [ height %tmp.147 109 63 69 ];
+        %tmp.148 = 0.66;
+        %tmp.149 = mul %tmp.147 %tmp.148;
+        invoke %tmp.136 %tmp.137(%tmp.140, %tmp.143, %tmp.146, %tmp.149);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 111 8 ]
+        %tmp.150 = lgetv %dc;
+        symbol [ dc %tmp.150 111 8 10 ];
+        symbol [ setColor %tmp.151 111 11 19 ];
+        %tmp.151 = getv function %tmp.150 :setColor;
+        symbol [ Graphics %tmp.152 111 20 28 ];
+        %tmp.152 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.153 111 29 40 ];
+        %tmp.153 = getv %tmp.152 :COLOR_WHITE;
+        symbol [ Graphics %tmp.154 111 42 50 ];
+        %tmp.154 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.155 111 51 68 ];
+        %tmp.155 = getv %tmp.154 :COLOR_TRANSPARENT;
+        invoke %tmp.150 %tmp.151(%tmp.153, %tmp.155);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 112 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %maxText.9 = local;
+        symbol [ maxText %maxText.9 112 12 19 ];
+        %tmp.156 = "MAX  ";
+        %tmp.157 = self;
+        symbol [ _formatOneDecimal %tmp.158 112 32 49 ];
+        %tmp.158 = getv function %tmp.157 :_formatOneDecimal;
+        symbol [ _maxThrowKmh %tmp.160 112 50 62 ];
+        %tmp.160 = getv ? :_maxThrowKmh;
+        %tmp.161 = invoke %tmp.157 %tmp.158(%tmp.160);
+        %tmp.162 = add %tmp.156 %tmp.161;
+        %tmp.163 = " km/h";
+        %tmp.164 = add %tmp.162 %tmp.163;
+        lputv %maxText.9 %tmp.164;
+        symbol [ maxText %maxText.9 112 12 19 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 113 8 ]
+        %tmp.165 = self;
+        symbol [ _drawSmallText %tmp.166 113 8 22 ];
+        %tmp.166 = getv function %tmp.165 :_drawSmallText;
+        %tmp.167 = lgetv %dc;
+        symbol [ dc %tmp.167 113 23 25 ];
+        %tmp.168 = lgetv %maxText.9;
+        symbol [ maxText %tmp.168 113 27 34 ];
+        %tmp.169 = lgetv %centerX.3;
+        symbol [ centerX %tmp.169 113 36 43 ];
+        %tmp.170 = lgetv %height.2;
+        symbol [ height %tmp.170 113 45 51 ];
+        %tmp.171 = 0.73;
+        %tmp.172 = mul %tmp.170 %tmp.171;
+        %tmp.173 = lgetv %width.1;
+        symbol [ width %tmp.173 113 60 65 ];
+        %tmp.174 = 0.72;
+        %tmp.175 = mul %tmp.173 %tmp.174;
+        invoke %tmp.165 %tmp.166(%tmp.167, %tmp.168, %tmp.169, %tmp.172, %tmp.175);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 115 8 ]
+        %tmp.176 = lgetv %dc;
+        symbol [ dc %tmp.176 115 8 10 ];
+        symbol [ setColor %tmp.177 115 11 19 ];
+        %tmp.177 = getv function %tmp.176 :setColor;
+        %tmp.178 = lgetv %muted.5;
+        symbol [ muted %tmp.178 115 20 25 ];
+        symbol [ Graphics %tmp.179 115 27 35 ];
+        %tmp.179 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.180 115 36 53 ];
+        %tmp.180 = getv %tmp.179 :COLOR_TRANSPARENT;
+        invoke %tmp.176 %tmp.177(%tmp.178, %tmp.180);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 116 8 ]
+        %tmp.181 = lgetv %dc;
+        symbol [ dc %tmp.181 116 8 10 ];
+        symbol [ drawText %tmp.182 116 11 19 ];
+        %tmp.182 = getv function %tmp.181 :drawText;
+        %tmp.183 = lgetv %centerX.3;
+        symbol [ centerX %tmp.183 116 20 27 ];
+        %tmp.184 = lgetv %height.2;
+        symbol [ height %tmp.184 116 29 35 ];
+        %tmp.185 = 0.80;
+        %tmp.186 = mul %tmp.184 %tmp.185;
+        symbol [ Graphics %tmp.187 116 44 52 ];
+        %tmp.187 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.188 116 53 63 ];
+        %tmp.188 = getv %tmp.187 :FONT_XTINY;
+        %tmp.189 = "LAST 5  /  km/h";
+        %tmp.190 = lgetv %centered.6;
+        symbol [ centered %tmp.190 116 84 92 ];
+        invoke %tmp.181 %tmp.182(%tmp.183, %tmp.186, %tmp.188, %tmp.189, %tmp.190);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 117 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop" ]
+        %firstEnd.10 = local;
+        symbol [ firstEnd %firstEnd.10 117 12 20 ];
+        symbol [ _lastThrows %tmp.192 117 23 34 ];
+        %tmp.192 = getv ? :_lastThrows;
+        symbol [ size %tmp.193 117 35 39 ];
+        %tmp.193 = getv function %tmp.192 :size;
+        %tmp.194 = invoke %tmp.192 %tmp.193();
+        lputv %firstEnd.10 %tmp.194;
+        symbol [ firstEnd %firstEnd.10 117 12 20 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 118 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_8_120_8_if_stmt:
+        %tmp.195 = lgetv %firstEnd.10;
+        symbol [ firstEnd %tmp.195 118 12 20 ];
+        %tmp.196 = 3;
+        %tmp.197 = gt %tmp.195 %tmp.196;
+        bf %tmp.197 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_8_120_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_8_120_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_26_120_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 119 12 ]
+        %tmp.198 = 3;
+        lputv %firstEnd.10 %tmp.198;
+        symbol [ firstEnd %firstEnd.10 119 12 20 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_26_120_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_8_120_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_118_8_120_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 121 8 ]
+        %tmp.199 = self;
+        symbol [ _drawSmallText %tmp.200 121 8 22 ];
+        %tmp.200 = getv function %tmp.199 :_drawSmallText;
+        %tmp.201 = lgetv %dc;
+        symbol [ dc %tmp.201 121 23 25 ];
+        %tmp.202 = self;
+        symbol [ _formatHistory %tmp.203 121 27 41 ];
+        %tmp.203 = getv function %tmp.202 :_formatHistory;
+        %tmp.204 = 0;
+        %tmp.205 = lgetv %firstEnd.10;
+        symbol [ firstEnd %tmp.205 121 45 53 ];
+        %tmp.206 = invoke %tmp.202 %tmp.203(%tmp.204, %tmp.205);
+        %tmp.207 = lgetv %centerX.3;
+        symbol [ centerX %tmp.207 121 56 63 ];
+        %tmp.208 = lgetv %height.2;
+        symbol [ height %tmp.208 122 12 18 ];
+        %tmp.209 = 0.86;
+        %tmp.210 = mul %tmp.208 %tmp.209;
+        %tmp.211 = lgetv %width.1;
+        symbol [ width %tmp.211 122 27 32 ];
+        %tmp.212 = 0.60;
+        %tmp.213 = mul %tmp.211 %tmp.212;
+        invoke %tmp.199 %tmp.200(%tmp.201, %tmp.206, %tmp.207, %tmp.210, %tmp.213);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 123 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_8_126_8_if_stmt:
+        symbol [ _lastThrows %tmp.215 123 12 23 ];
+        %tmp.215 = getv ? :_lastThrows;
+        symbol [ size %tmp.216 123 24 28 ];
+        %tmp.216 = getv function %tmp.215 :size;
+        %tmp.217 = invoke %tmp.215 %tmp.216();
+        %tmp.218 = 3;
+        %tmp.219 = gt %tmp.217 %tmp.218;
+        bf %tmp.219 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_8_126_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_8_126_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_36_126_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 124 12 ]
+        %tmp.220 = self;
+        symbol [ _drawSmallText %tmp.221 124 12 26 ];
+        %tmp.221 = getv function %tmp.220 :_drawSmallText;
+        %tmp.222 = lgetv %dc;
+        symbol [ dc %tmp.222 124 27 29 ];
+        %tmp.223 = self;
+        symbol [ _formatHistory %tmp.224 124 31 45 ];
+        %tmp.224 = getv function %tmp.223 :_formatHistory;
+        %tmp.225 = 3;
+        symbol [ _lastThrows %tmp.227 124 49 60 ];
+        %tmp.227 = getv ? :_lastThrows;
+        symbol [ size %tmp.228 124 61 65 ];
+        %tmp.228 = getv function %tmp.227 :size;
+        %tmp.229 = invoke %tmp.227 %tmp.228();
+        %tmp.230 = invoke %tmp.223 %tmp.224(%tmp.225, %tmp.229);
+        %tmp.231 = lgetv %centerX.3;
+        symbol [ centerX %tmp.231 124 70 77 ];
+        %tmp.232 = lgetv %height.2;
+        symbol [ height %tmp.232 125 16 22 ];
+        %tmp.233 = 0.92;
+        %tmp.234 = mul %tmp.232 %tmp.233;
+        %tmp.235 = lgetv %width.1;
+        symbol [ width %tmp.235 125 31 36 ];
+        %tmp.236 = 0.40;
+        %tmp.237 = mul %tmp.235 %tmp.236;
+        invoke %tmp.220 %tmp.221(%tmp.222, %tmp.230, %tmp.231, %tmp.234, %tmp.237);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_36_126_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_8_126_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_123_8_126_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_68_40_127_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 129; @symbol_functiondef = [_drawSpeed,129,13,23]; @symbol_param<0> = [dc,129,24,26]; @symbol_param<0>_type<0> = [Dc,129,30,32]; @symbol_param<1> = [text,129,34,38]; @symbol_param<1>_type<0> = [String,129,42,48]; @symbol_param<2> = [x,129,50,51]; @symbol_param<3> = [y,129,53,54]; @symbol_param<4> = [maxWidth,129,56,64]; @symbol_param<5> = [maxHeight,129,66,75]; ]
+    function _drawSpeed(dc as Dc, text as String, x, y, maxWidth, maxHeight) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 130 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_stop" ]
+        %fonts.1 = local;
+        symbol [ fonts %fonts.1 130 12 17 ];
+        %tmp.1 = newa 6;
+        symbol [ Graphics %tmp.2 130 21 29 ];
+        %tmp.2 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.3 130 30 45 ];
+        %tmp.3 = getv %tmp.2 :FONT_NUMBER_HOT;
+        %tmp.4 = dup %tmp.1;
+        %tmp.5 = aputv %tmp.4 0 %tmp.3;
+        symbol [ Graphics %tmp.6 130 47 55 ];
+        %tmp.6 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MEDIUM %tmp.7 130 56 74 ];
+        %tmp.7 = getv %tmp.6 :FONT_NUMBER_MEDIUM;
+        %tmp.8 = dup %tmp.5;
+        %tmp.9 = aputv %tmp.8 1 %tmp.7;
+        symbol [ Graphics %tmp.10 131 12 20 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.11 131 21 37 ];
+        %tmp.11 = getv %tmp.10 :FONT_NUMBER_MILD;
+        %tmp.12 = dup %tmp.9;
+        %tmp.13 = aputv %tmp.12 2 %tmp.11;
+        symbol [ Graphics %tmp.14 131 39 47 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.15 131 48 59 ];
+        %tmp.15 = getv %tmp.14 :FONT_MEDIUM;
+        %tmp.16 = dup %tmp.13;
+        %tmp.17 = aputv %tmp.16 3 %tmp.15;
+        symbol [ Graphics %tmp.18 131 61 69 ];
+        %tmp.18 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.19 131 70 80 ];
+        %tmp.19 = getv %tmp.18 :FONT_SMALL;
+        %tmp.20 = dup %tmp.17;
+        %tmp.21 = aputv %tmp.20 4 %tmp.19;
+        symbol [ Graphics %tmp.22 132 12 20 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.23 132 21 31 ];
+        %tmp.23 = getv %tmp.22 :FONT_XTINY;
+        %tmp.24 = dup %tmp.21;
+        %tmp.25 = aputv %tmp.24 5 %tmp.23;
+        lputv %fonts.1 %tmp.25;
+        symbol [ fonts %fonts.1 130 12 17 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 133 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_stop" ]
+        %font.2 = local;
+        symbol [ font %font.2 133 12 16 ];
+        symbol [ Graphics %tmp.26 133 19 27 ];
+        %tmp.26 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.27 133 28 38 ];
+        %tmp.27 = getv %tmp.26 :FONT_XTINY;
+        lputv %font.2 %tmp.27;
+        symbol [ font %font.2 133 12 16 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 134 8 ]
+        for @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_test @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_incr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_init:
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_begin" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 134 17 18 ];
+        %tmp.28 = 0;
+        lputv %i.3 %tmp.28;
+        symbol [ i %i.3 134 17 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_test:
+        %tmp.29 = lgetv %i.3;
+        symbol [ i %tmp.29 134 24 25 ];
+        %tmp.30 = lgetv %fonts.1;
+        symbol [ fonts %tmp.30 134 28 33 ];
+        symbol [ size %tmp.31 134 34 38 ];
+        %tmp.31 = getv function %tmp.30 :size;
+        %tmp.32 = invoke %tmp.30 %tmp.31();
+        %tmp.33 = lt %tmp.29 %tmp.32;
+        bf %tmp.33 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_begin:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_50_140_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 135 12 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_stmt:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_16_136_46_begin:
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 135 16 18 ];
+        symbol [ getTextWidthInPixels %tmp.35 135 19 39 ];
+        %tmp.35 = getv function %tmp.34 :getTextWidthInPixels;
+        %tmp.36 = lgetv %text;
+        symbol [ text %tmp.36 135 40 44 ];
+        %tmp.37 = lgetv %fonts.1;
+        symbol [ fonts %tmp.37 135 46 51 ];
+        %tmp.38 = lgetv %i.3;
+        symbol [ i %tmp.38 135 52 53 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        %tmp.40 = invoke %tmp.34 %tmp.35(%tmp.36, %tmp.39);
+        %tmp.41 = lgetv %maxWidth;
+        symbol [ maxWidth %tmp.41 135 59 67 ];
+        %tmp.42 = lte %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_16_136_46_true:
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 136 16 18 ];
+        symbol [ getFontHeight %tmp.44 136 19 32 ];
+        %tmp.44 = getv function %tmp.43 :getFontHeight;
+        %tmp.45 = lgetv %fonts.1;
+        symbol [ fonts %tmp.45 136 33 38 ];
+        %tmp.46 = lgetv %i.3;
+        symbol [ i %tmp.46 136 39 40 ];
+        %tmp.47 = agetv %tmp.45 %tmp.46;
+        %tmp.48 = invoke %tmp.43 %tmp.44(%tmp.47);
+        %tmp.49 = lgetv %maxHeight;
+        symbol [ maxHeight %tmp.49 136 46 55 ];
+        %tmp.50 = lte %tmp.48 %tmp.49;
+        push %tmp.50;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_16_136_46_end:
+        %tmp.51 = phi [%tmp.42 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_16_136_46_begin] [%tmp.50 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_16_136_46_true] [%tmp.51 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_16_136_46_end];
+        bf %tmp.51 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_57_139_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 137 16 ]
+        %tmp.52 = lgetv %fonts.1;
+        symbol [ fonts %tmp.52 137 23 28 ];
+        %tmp.53 = lgetv %i.3;
+        symbol [ i %tmp.53 137 29 30 ];
+        %tmp.54 = agetv %tmp.52 %tmp.53;
+        lputv %font.2 %tmp.54;
+        symbol [ font %font.2 137 16 20 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 138 16 ]
+        goto break @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_136_57_139_12_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_135_12_139_12_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_50_140_8_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_incr:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 134 ]
+        %tmp.55 = lgetv %i.3;
+        symbol [ i %tmp.55 134 42 43 ];
+        %tmp.56 = 1;
+        %tmp.57 = add %tmp.55 %tmp.56;
+        lputv %i.3 %tmp.57;
+        symbol [ i %i.3 134 42 43 ];
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_test;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_134_8_140_8_for_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 141 8 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 141 8 10 ];
+        symbol [ drawText %tmp.59 141 11 19 ];
+        %tmp.59 = getv function %tmp.58 :drawText;
+        %tmp.60 = lgetv %x;
+        symbol [ x %tmp.60 141 20 21 ];
+        %tmp.61 = lgetv %y;
+        symbol [ y %tmp.61 141 23 24 ];
+        %tmp.62 = lgetv %font.2;
+        symbol [ font %tmp.62 141 26 30 ];
+        %tmp.63 = lgetv %text;
+        symbol [ text %tmp.63 141 32 36 ];
+        symbol [ Graphics %tmp.64 142 12 20 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.65 142 21 40 ];
+        %tmp.65 = getv %tmp.64 :TEXT_JUSTIFY_CENTER;
+        symbol [ Graphics %tmp.66 142 43 51 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.67 142 52 72 ];
+        %tmp.67 = getv %tmp.66 :TEXT_JUSTIFY_VCENTER;
+        %tmp.68 = bitor %tmp.65 %tmp.67;
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.61, %tmp.62, %tmp.63, %tmp.68);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_129_85_143_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 145; @symbol_functiondef = [_drawSmallText,145,13,27]; @symbol_param<0> = [dc,145,28,30]; @symbol_param<0>_type<0> = [Dc,145,34,36]; @symbol_param<1> = [text,145,38,42]; @symbol_param<1>_type<0> = [String,145,46,52]; @symbol_param<2> = [x,145,54,55]; @symbol_param<3> = [y,145,57,58]; @symbol_param<4> = [maxWidth,145,60,68]; ]
+    function _drawSmallText(dc as Dc, text as String, x, y, maxWidth) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 146 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_stop" ]
+        %font.1 = local;
+        symbol [ font %font.1 146 12 16 ];
+        symbol [ Graphics %tmp.1 146 19 27 ];
+        %tmp.1 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.2 146 28 38 ];
+        %tmp.2 = getv %tmp.1 :FONT_XTINY;
+        lputv %font.1 %tmp.2;
+        symbol [ font %font.1 146 12 16 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 147 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_stop" ]
+        %fitted.2 = local;
+        symbol [ fitted %fitted.2 147 12 18 ];
+        %tmp.3 = lgetv %text;
+        symbol [ text %tmp.3 147 21 25 ];
+        lputv %fitted.2 %tmp.3;
+        symbol [ fitted %fitted.2 147 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 148 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_stop" ]
+        %length.3 = local;
+        symbol [ length %length.3 148 12 18 ];
+        %tmp.4 = lgetv %text;
+        symbol [ text %tmp.4 148 21 25 ];
+        symbol [ length %tmp.5 148 26 32 ];
+        %tmp.5 = getv function %tmp.4 :length;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %length.3 %tmp.6;
+        symbol [ length %length.3 148 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 149 8 ]
+        while @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_test @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_test:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_15_149_76_begin:
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 149 15 17 ];
+        symbol [ getTextWidthInPixels %tmp.8 149 18 38 ];
+        %tmp.8 = getv function %tmp.7 :getTextWidthInPixels;
+        %tmp.9 = lgetv %fitted.2;
+        symbol [ fitted %tmp.9 149 39 45 ];
+        %tmp.10 = lgetv %font.1;
+        symbol [ font %tmp.10 149 47 51 ];
+        %tmp.11 = invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10);
+        %tmp.12 = lgetv %maxWidth;
+        symbol [ maxWidth %tmp.12 149 55 63 ];
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        %tmp.14 = dup %tmp.13;
+        bf %tmp.14 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_67_149_76_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_67_149_76_true:
+        %tmp.15 = lgetv %length.3;
+        symbol [ length %tmp.15 149 67 73 ];
+        %tmp.16 = 0;
+        %tmp.17 = gt %tmp.15 %tmp.16;
+        %tmp.18 = and %tmp.13 %tmp.17;
+        push %tmp.18;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_67_149_76_end:
+        %tmp.19 = phi [%tmp.14 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_15_149_76_begin] [%tmp.18 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_67_149_76_true] [%tmp.19 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_67_149_76_end];
+        bf %tmp.19 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_begin:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_79_152_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 150 12 ]
+        %tmp.20 = lgetv %length.3;
+        symbol [ length %tmp.20 150 12 18 ];
+        %tmp.21 = 1;
+        %tmp.22 = sub %tmp.20 %tmp.21;
+        lputv %length.3 %tmp.22;
+        symbol [ length %length.3 150 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 151 12 ]
+        %tmp.23 = lgetv %text;
+        symbol [ text %tmp.23 151 21 25 ];
+        symbol [ substring %tmp.24 151 26 35 ];
+        %tmp.24 = getv function %tmp.23 :substring;
+        %tmp.25 = 0;
+        %tmp.26 = lgetv %length.3;
+        symbol [ length %tmp.26 151 39 45 ];
+        %tmp.27 = invoke %tmp.23 %tmp.24(%tmp.25, %tmp.26);
+        %tmp.28 = "...";
+        %tmp.29 = add %tmp.27 %tmp.28;
+        lputv %fitted.2 %tmp.29;
+        symbol [ fitted %fitted.2 151 12 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_79_152_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_test;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_149_8_152_8_while_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 153 8 ]
+        %tmp.30 = lgetv %dc;
+        symbol [ dc %tmp.30 153 8 10 ];
+        symbol [ drawText %tmp.31 153 11 19 ];
+        %tmp.31 = getv function %tmp.30 :drawText;
+        %tmp.32 = lgetv %x;
+        symbol [ x %tmp.32 153 20 21 ];
+        %tmp.33 = lgetv %y;
+        symbol [ y %tmp.33 153 23 24 ];
+        %tmp.34 = lgetv %font.1;
+        symbol [ font %tmp.34 153 26 30 ];
+        %tmp.35 = lgetv %fitted.2;
+        symbol [ fitted %tmp.35 153 32 38 ];
+        symbol [ Graphics %tmp.36 154 12 20 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.37 154 21 40 ];
+        %tmp.37 = getv %tmp.36 :TEXT_JUSTIFY_CENTER;
+        symbol [ Graphics %tmp.38 154 43 51 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.39 154 52 72 ];
+        %tmp.39 = getv %tmp.38 :TEXT_JUSTIFY_VCENTER;
+        %tmp.40 = bitor %tmp.37 %tmp.39;
+        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33, %tmp.34, %tmp.35, %tmp.40);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_145_78_155_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 157; @symbol_functiondef = [resetStats,157,13,23]; ]
+    function resetStats() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_157_34_168_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 158 8 ]
+        %tmp.1 = 0.0;
+        symbol [ _lastThrowKmh ? 158 8 21 ];
+        putv self :_lastThrowKmh %tmp.1;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 159 8 ]
+        %tmp.2 = 0.0;
+        symbol [ _lastThrowMph ? 159 8 21 ];
+        putv self :_lastThrowMph %tmp.2;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 160 8 ]
+        %tmp.3 = 0.0;
+        symbol [ _maxThrowKmh ? 160 8 20 ];
+        putv self :_maxThrowKmh %tmp.3;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 161 8 ]
+        %tmp.4 = newa 0;
+        symbol [ _lastThrows ? 161 8 19 ];
+        putv self :_lastThrows %tmp.4;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 163 8 ]
+        %tmp.5 = self;
+        symbol [ _resetDetection %tmp.6 163 8 23 ];
+        %tmp.6 = getv function %tmp.5 :_resetDetection;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 165 8 ]
+        %tmp.7 = true;
+        symbol [ _showResetMessage ? 165 8 25 ];
+        putv self :_showResetMessage %tmp.7;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 166 8 ]
+        symbol [ System %tmp.8 166 31 37 ];
+        %tmp.8 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.9 166 38 46 ];
+        %tmp.9 = getv function %tmp.8 :getTimer;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        symbol [ RESET_MESSAGE_DURATION_MS %tmp.12 166 51 76 ];
+        %tmp.12 = getv ? :RESET_MESSAGE_DURATION_MS;
+        %tmp.13 = add %tmp.10 %tmp.12;
+        symbol [ _resetMessageUntilMs ? 166 8 28 ];
+        putv self :_resetMessageUntilMs %tmp.13;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 167 8 ]
+        symbol [ WatchUi %tmp.14 167 8 15 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.15 167 16 29 ];
+        %tmp.15 = getv function %tmp.14 :requestUpdate;
+        invoke %tmp.14 %tmp.15();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_157_34_168_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 170; @symbol_functiondef = [_startSensorListener,170,13,33]; ]
+    function _startSensorListener() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_170_44_187_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 171 8 ]
+        %tmp.1 = null;
+        symbol [ _lastSensorUpdateMs ? 171 8 27 ];
+        putv self :_lastSensorUpdateMs %tmp.1;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 172 8 ]
+        %tmp.2 = false;
+        symbol [ _sensorError ? 172 8 20 ];
+        putv self :_sensorError %tmp.2;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 173 8 ]
+        %tmp.3 = self;
+        symbol [ _resetDetection %tmp.4 173 8 23 ];
+        %tmp.4 = getv function %tmp.3 :_resetDetection;
+        invoke %tmp.3 %tmp.4();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 174 8 ]
+        try @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_beginTry @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_endTry @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_catch @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_beginTry:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_12_177_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 175 12 ]
+        %tmp.5 = self;
+        symbol [ _configureSampleRate %tmp.6 175 12 32 ];
+        %tmp.6 = getv function %tmp.5 :_configureSampleRate;
+        symbol [ Sensor %tmp.7 175 33 39 ];
+        %tmp.7 = getm $.Toybox.Sensor;
+        symbol [ getMaxSampleRate %tmp.8 175 40 56 ];
+        %tmp.8 = getv function %tmp.7 :getMaxSampleRate;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        invoke %tmp.5 %tmp.6(%tmp.9);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 176 12 ]
+        %tmp.10 = self;
+        symbol [ _registerAccelerometer %tmp.11 176 12 34 ];
+        %tmp.11 = getv function %tmp.10 :_registerAccelerometer;
+        invoke %tmp.10 %tmp.11();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_12_177_8_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_endTry:
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_catch:
+        %tmp.12 = exception;
+        push %tmp.12;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 177 10 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_catch" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_10_186_8_end" ]
+        %error.1 = local;
+        symbol [ error %error.1 177 17 22 ];
+        %tmp.13 = dup %tmp.12;
+        lputv %error.1 %tmp.13;
+        symbol [ error %error.1 177 17 22 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_24_186_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 179 12 ]
+        try @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_beginTry @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_endTry @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_catch @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_beginTry:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_16_182_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 180 16 ]
+        %tmp.14 = self;
+        symbol [ _configureSampleRate %tmp.15 180 16 36 ];
+        %tmp.15 = getv function %tmp.14 :_configureSampleRate;
+        symbol [ DEFAULT_SAMPLE_HZ %tmp.17 180 37 54 ];
+        %tmp.17 = getv ? :DEFAULT_SAMPLE_HZ;
+        invoke %tmp.14 %tmp.15(%tmp.17);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 181 16 ]
+        %tmp.18 = self;
+        symbol [ _registerAccelerometer %tmp.19 181 16 38 ];
+        %tmp.19 = getv function %tmp.18 :_registerAccelerometer;
+        invoke %tmp.18 %tmp.19();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_16_182_12_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_endTry:
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_catch:
+        %tmp.20 = exception;
+        push %tmp.20;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 182 14 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_catch" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_14_185_12_end" ]
+        %fallbackError.2 = local;
+        symbol [ fallbackError %fallbackError.2 182 21 34 ];
+        %tmp.21 = dup %tmp.20;
+        lputv %fallbackError.2 %tmp.21;
+        symbol [ fallbackError %fallbackError.2 182 21 34 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_36_185_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 183 16 ]
+        %tmp.22 = true;
+        symbol [ _sensorError ? 183 16 28 ];
+        putv self :_sensorError %tmp.22;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 184 16 ]
+        symbol [ System %tmp.23 184 16 22 ];
+        %tmp.23 = getm $.Toybox.System;
+        symbol [ println %tmp.24 184 23 30 ];
+        %tmp.24 = getv function %tmp.23 :println;
+        %tmp.25 = "Accelerometer registration failed: ";
+        %tmp.26 = lgetv %fallbackError.2;
+        symbol [ fallbackError %tmp.26 184 71 84 ];
+        symbol [ getErrorMessage %tmp.27 184 85 100 ];
+        %tmp.27 = getv function %tmp.26 :getErrorMessage;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        %tmp.29 = add %tmp.25 %tmp.28;
+        invoke %tmp.23 %tmp.24(%tmp.29);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_36_185_12_stop:
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally;
+        pop;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_14_185_12_end:
+        try @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_catch @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_14_185_12_end @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_182_14_185_12_end @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally;
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally;
+        throw %tmp.20;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_finally:
+        jsrret;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_179_12_185_12_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_24_186_8_stop:
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally;
+        pop;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_10_186_8_end:
+        try @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_catch @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_10_186_8_end @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_177_10_186_8_end @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally;
+        jsr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally;
+        throw %tmp.12;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_finally:
+        jsrret;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_174_8_186_8_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_170_44_187_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 189; @symbol_functiondef = [_configureSampleRate,189,13,33]; @symbol_param<0> = [rate,189,34,38]; @symbol_param<0>_type<0> = [Number,189,42,48]; ]
+    function _configureSampleRate(rate as Number) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_189_58_201_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 190 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_begin:
+        %tmp.1 = lgetv %rate;
+        symbol [ rate %tmp.1 190 24 28 ];
+        %tmp.2 = 0;
+        %tmp.3 = gt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_true:
+        %tmp.4 = lgetv %rate;
+        symbol [ rate %tmp.4 190 35 39 ];
+        push %tmp.4;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_else_false:
+        symbol [ DEFAULT_SAMPLE_HZ %tmp.6 190 42 59 ];
+        %tmp.6 = getv ? :DEFAULT_SAMPLE_HZ;
+        push %tmp.6;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_end:
+        %tmp.7 = phi [%tmp.3 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_begin] [%tmp.4 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_true] [%tmp.6 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_else_false] [%tmp.7 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_190_24_190_42_end];
+        symbol [ _sampleRateHz ? 190 8 21 ];
+        putv self :_sampleRateHz %tmp.7;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 192 8 ]
+        symbol [ _sampleRateHz %tmp.9 192 25 38 ];
+        %tmp.9 = getv ? :_sampleRateHz;
+        %tmp.10 = 0.04;
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        symbol [ toNumber %tmp.12 192 47 55 ];
+        %tmp.12 = getv function %tmp.11 :toNumber;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        symbol [ _startSamples ? 192 8 21 ];
+        putv self :_startSamples %tmp.13;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 193 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_8_195_8_if_stmt:
+        symbol [ _startSamples %tmp.15 193 12 25 ];
+        %tmp.15 = getv ? :_startSamples;
+        %tmp.16 = 2;
+        %tmp.17 = lt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_8_195_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_8_195_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_31_195_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 194 12 ]
+        %tmp.18 = 2;
+        symbol [ _startSamples ? 194 12 25 ];
+        putv self :_startSamples %tmp.18;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_31_195_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_8_195_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_193_8_195_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 196 8 ]
+        symbol [ _sampleRateHz %tmp.20 196 23 36 ];
+        %tmp.20 = getv ? :_sampleRateHz;
+        %tmp.21 = 0.12;
+        %tmp.22 = mul %tmp.20 %tmp.21;
+        symbol [ toNumber %tmp.23 196 45 53 ];
+        %tmp.23 = getv function %tmp.22 :toNumber;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        symbol [ _endSamples ? 196 8 19 ];
+        putv self :_endSamples %tmp.24;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 197 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_8_199_8_if_stmt:
+        symbol [ _endSamples %tmp.26 197 12 23 ];
+        %tmp.26 = getv ? :_endSamples;
+        %tmp.27 = 1;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_8_199_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_8_199_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_29_199_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 198 12 ]
+        %tmp.29 = 1;
+        symbol [ _endSamples ? 198 12 23 ];
+        putv self :_endSamples %tmp.29;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_29_199_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_8_199_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_197_8_199_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 200 8 ]
+        symbol [ _sampleRateHz %tmp.31 200 27 40 ];
+        %tmp.31 = getv ? :_sampleRateHz;
+        %tmp.32 = 2;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        symbol [ _maxThrowSamples ? 200 8 24 ];
+        putv self :_maxThrowSamples %tmp.33;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_189_58_201_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 203; @symbol_functiondef = [_registerAccelerometer,203,13,35]; ]
+    function _registerAccelerometer() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_203_46_212_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 204 8 ]
+        symbol [ Sensor %tmp.1 204 8 14 ];
+        %tmp.1 = getm $.Toybox.Sensor;
+        symbol [ registerSensorDataListener %tmp.2 204 15 41 ];
+        %tmp.2 = getv function %tmp.1 :registerSensorDataListener;
+        %tmp.3 = self;
+        symbol [ method %tmp.4 204 42 48 ];
+        %tmp.4 = getv function %tmp.3 :method;
+        %tmp.6 = const :_onSensorData;
+        symbol [ _onSensorData %tmp.6 204 50 63 const ];
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.6);
+        %tmp.8 = newd 2;
+        %tmp.10 = const :period;
+        symbol [ period %tmp.10 205 13 19 const ];
+        %tmp.11 = 1;
+        %tmp.12 = dup %tmp.8;
+        %tmp.13 = aputv %tmp.12 %tmp.10 %tmp.11;
+        %tmp.15 = const :accelerometer;
+        symbol [ accelerometer %tmp.15 206 13 26 const ];
+        %tmp.16 = newd 2;
+        %tmp.18 = const :enabled;
+        symbol [ enabled %tmp.18 207 17 24 const ];
+        %tmp.19 = true;
+        %tmp.20 = dup %tmp.16;
+        %tmp.21 = aputv %tmp.20 %tmp.18 %tmp.19;
+        %tmp.23 = const :sampleRate;
+        symbol [ sampleRate %tmp.23 208 17 27 const ];
+        symbol [ _sampleRateHz %tmp.25 208 31 44 ];
+        %tmp.25 = getv ? :_sampleRateHz;
+        %tmp.26 = dup %tmp.21;
+        %tmp.27 = aputv %tmp.26 %tmp.23 %tmp.25;
+        %tmp.28 = dup %tmp.13;
+        %tmp.29 = aputv %tmp.28 %tmp.15 %tmp.27;
+        invoke %tmp.1 %tmp.2(%tmp.7, %tmp.29);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 211 8 ]
+        symbol [ System %tmp.30 211 8 14 ];
+        %tmp.30 = getm $.Toybox.System;
+        symbol [ println %tmp.31 211 15 22 ];
+        %tmp.31 = getv function %tmp.30 :println;
+        %tmp.32 = "Base model accelerometer rate: ";
+        symbol [ _sampleRateHz %tmp.34 211 59 72 ];
+        %tmp.34 = getv ? :_sampleRateHz;
+        %tmp.35 = add %tmp.32 %tmp.34;
+        %tmp.36 = " Hz";
+        %tmp.37 = add %tmp.35 %tmp.36;
+        invoke %tmp.30 %tmp.31(%tmp.37);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_203_46_212_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 214; @symbol_functiondef = [_onSensorData,214,13,26]; @symbol_param<0> = [sensorInfo,214,27,37]; @symbol_param<0>_type<0> = [Sensor,214,41,47]; @symbol_param<0>_type<1> = [SensorData,214,48,58]; ]
+    function _onSensorData(sensorInfo as Sensor.SensorData) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_214_68_228_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 215 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_214_68_228_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_214_68_228_4_stop" ]
+        %sample.1 = local;
+        symbol [ sample %sample.1 215 12 18 ];
+        %tmp.1 = lgetv %sensorInfo;
+        symbol [ sensorInfo %tmp.1 215 21 31 ];
+        symbol [ accelerometerData %tmp.2 215 32 49 ];
+        %tmp.2 = getv %tmp.1 :accelerometerData;
+        lputv %sample.1 %tmp.2;
+        symbol [ sample %sample.1 215 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 216 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_stmt:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_12_216_49_begin:
+        %tmp.3 = lgetv %sample.1;
+        symbol [ sample %tmp.3 216 12 18 ];
+        %tmp.4 = null;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bt %tmp.5 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_true;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_30_216_49_false:
+        %tmp.6 = lgetv %sample.1;
+        symbol [ sample %tmp.6 216 30 36 ];
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ x %tmp.8 216 37 38 ];
+        %tmp.8 = getv %tmp.7 :x;
+        symbol [ size %tmp.9 216 39 43 ];
+        %tmp.9 = getv function %tmp.8 :size;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 0;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        push %tmp.12;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_30_216_49_end:
+        %tmp.13 = phi [%tmp.5 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_12_216_49_begin] [%tmp.12 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_30_216_49_false] [%tmp.13 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_30_216_49_end];
+        bf %tmp.13 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_52_218_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 217 12 ]
+        ret ?;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_52_218_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_216_8_218_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 219 8 ]
+        symbol [ System %tmp.14 219 30 36 ];
+        %tmp.14 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.15 219 37 45 ];
+        %tmp.15 = getv function %tmp.14 :getTimer;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        symbol [ _lastSensorUpdateMs ? 219 8 27 ];
+        putv self :_lastSensorUpdateMs %tmp.16;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 220 8 ]
+        %tmp.17 = false;
+        symbol [ _sensorError ? 220 8 20 ];
+        putv self :_sensorError %tmp.17;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 222 8 ]
+        for @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_test @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_incr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_init:
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_begin" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 222 17 18 ];
+        %tmp.18 = 0;
+        lputv %i.2 %tmp.18;
+        symbol [ i %i.2 222 17 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_test:
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 222 24 25 ];
+        %tmp.20 = lgetv %sample.1;
+        symbol [ sample %tmp.20 222 28 34 ];
+        symbol [ x %tmp.21 222 35 36 ];
+        %tmp.21 = getv %tmp.20 :x;
+        symbol [ size %tmp.22 222 37 41 ];
+        %tmp.22 = getv function %tmp.21 :size;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = lt %tmp.19 %tmp.23;
+        bf %tmp.24 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_begin:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_53_224_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 223 12 ]
+        %tmp.25 = self;
+        symbol [ _processSample %tmp.26 223 12 26 ];
+        %tmp.26 = getv function %tmp.25 :_processSample;
+        %tmp.27 = lgetv %sample.1;
+        symbol [ sample %tmp.27 223 27 33 ];
+        symbol [ x %tmp.28 223 34 35 ];
+        %tmp.28 = getv %tmp.27 :x;
+        %tmp.29 = lgetv %i.2;
+        symbol [ i %tmp.29 223 36 37 ];
+        %tmp.30 = agetv %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %sample.1;
+        symbol [ sample %tmp.31 223 40 46 ];
+        symbol [ y %tmp.32 223 47 48 ];
+        %tmp.32 = getv %tmp.31 :y;
+        %tmp.33 = lgetv %i.2;
+        symbol [ i %tmp.33 223 49 50 ];
+        %tmp.34 = agetv %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %sample.1;
+        symbol [ sample %tmp.35 223 53 59 ];
+        symbol [ z %tmp.36 223 60 61 ];
+        %tmp.36 = getv %tmp.35 :z;
+        %tmp.37 = lgetv %i.2;
+        symbol [ i %tmp.37 223 62 63 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        invoke %tmp.25 %tmp.26(%tmp.30, %tmp.34, %tmp.38);
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_53_224_8_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_incr:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 222 ]
+        %tmp.39 = lgetv %i.2;
+        symbol [ i %tmp.39 222 45 46 ];
+        %tmp.40 = 1;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        lputv %i.2 %tmp.41;
+        symbol [ i %i.2 222 45 46 ];
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_test;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_222_8_224_8_for_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 227 8 ]
+        symbol [ WatchUi %tmp.42 227 8 15 ];
+        %tmp.42 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.43 227 16 29 ];
+        %tmp.43 = getv function %tmp.42 :requestUpdate;
+        invoke %tmp.42 %tmp.43();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_214_68_228_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 230; @symbol_functiondef = [_processSample,230,13,27]; @symbol_param<0> = [x,230,28,29]; @symbol_param<0>_type<0> = [Number,230,33,39]; @symbol_param<1> = [y,230,41,42]; @symbol_param<1>_type<0> = [Number,230,46,52]; @symbol_param<2> = [z,230,54,55]; @symbol_param<2>_type<0> = [Number,230,59,65]; ]
+    function _processSample(x as Number, y as Number, z as Number) as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 232 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop" ]
+        %xG.1 = local;
+        symbol [ xG %xG.1 232 12 14 ];
+        %tmp.1 = lgetv %x;
+        symbol [ x %tmp.1 232 17 18 ];
+        %tmp.2 = 1000.0;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %xG.1 %tmp.3;
+        symbol [ xG %xG.1 232 12 14 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 233 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop" ]
+        %yG.2 = local;
+        symbol [ yG %yG.2 233 12 14 ];
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 233 17 18 ];
+        %tmp.5 = 1000.0;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        lputv %yG.2 %tmp.6;
+        symbol [ yG %yG.2 233 12 14 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 234 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop" ]
+        %zG.3 = local;
+        symbol [ zG %zG.3 234 12 14 ];
+        %tmp.7 = lgetv %z;
+        symbol [ z %tmp.7 234 17 18 ];
+        %tmp.8 = 1000.0;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        lputv %zG.3 %tmp.9;
+        symbol [ zG %zG.3 234 12 14 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 235 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop" ]
+        %totalG.4 = local;
+        symbol [ totalG %totalG.4 235 12 18 ];
+        symbol [ Math %tmp.10 235 21 25 ];
+        %tmp.10 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.11 235 26 30 ];
+        %tmp.11 = getv function %tmp.10 :sqrt;
+        %tmp.12 = lgetv %xG.1;
+        symbol [ xG %tmp.12 235 31 33 ];
+        %tmp.13 = lgetv %xG.1;
+        symbol [ xG %tmp.13 235 36 38 ];
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = lgetv %yG.2;
+        symbol [ yG %tmp.15 235 41 43 ];
+        %tmp.16 = lgetv %yG.2;
+        symbol [ yG %tmp.16 235 46 48 ];
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = add %tmp.14 %tmp.17;
+        %tmp.19 = lgetv %zG.3;
+        symbol [ zG %tmp.19 235 51 53 ];
+        %tmp.20 = lgetv %zG.3;
+        symbol [ zG %tmp.20 235 56 58 ];
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.18 %tmp.21;
+        %tmp.23 = invoke %tmp.10 %tmp.11(%tmp.22);
+        lputv %totalG.4 %tmp.23;
+        symbol [ totalG %totalG.4 235 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 237 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop" ]
+        %movementMs2.5 = local;
+        symbol [ movementMs2 %movementMs2.5 237 12 23 ];
+        %tmp.24 = lgetv %totalG.4;
+        symbol [ totalG %tmp.24 237 27 33 ];
+        %tmp.25 = 1.0;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        symbol [ abs %tmp.27 237 41 44 ];
+        %tmp.27 = getv function %tmp.26 :abs;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        symbol [ GRAVITY_MS2 %tmp.30 237 49 60 ];
+        %tmp.30 = getv ? :GRAVITY_MS2;
+        %tmp.31 = mul %tmp.28 %tmp.30;
+        lputv %movementMs2.5 %tmp.31;
+        symbol [ movementMs2 %movementMs2.5 237 12 23 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 239 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_8_250_8_if_stmt:
+        symbol [ _waitingForRest %tmp.33 239 12 27 ];
+        %tmp.33 = getv ? :_waitingForRest;
+        bf %tmp.33 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_8_250_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_8_250_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_29_250_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 240 12 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_stmt:
+        %tmp.34 = lgetv %movementMs2.5;
+        symbol [ movementMs2 %tmp.34 240 16 27 ];
+        symbol [ END_THRESHOLD_MS2 %tmp.36 240 30 47 ];
+        %tmp.36 = getv ? :END_THRESHOLD_MS2;
+        %tmp.37 = lt %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_49_246_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 241 16 ]
+        symbol [ _endCount %tmp.38 241 16 25 ];
+        %tmp.38 = getv self :_endCount;
+        %tmp.39 = 1;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        symbol [ _endCount ? 241 16 25 ];
+        putv self :_endCount dup %tmp.40;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 242 16 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_16_245_16_if_stmt:
+        symbol [ _endCount %tmp.42 242 20 29 ];
+        %tmp.42 = getv ? :_endCount;
+        symbol [ _endSamples %tmp.44 242 33 44 ];
+        %tmp.44 = getv ? :_endSamples;
+        %tmp.45 = gte %tmp.42 %tmp.44;
+        bf %tmp.45 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_16_245_16_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_16_245_16_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_46_245_16_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 243 20 ]
+        %tmp.46 = false;
+        symbol [ _waitingForRest ? 243 20 35 ];
+        putv self :_waitingForRest %tmp.46;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 244 20 ]
+        %tmp.47 = 0;
+        symbol [ _endCount ? 244 20 29 ];
+        putv self :_endCount %tmp.47;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_46_245_16_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_16_245_16_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_242_16_245_16_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_49_246_12_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_else_false:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_246_19_248_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 247 16 ]
+        %tmp.48 = 0;
+        symbol [ _endCount ? 247 16 25 ];
+        putv self :_endCount %tmp.48;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_246_19_248_12_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_240_12_248_12_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 249 12 ]
+        ret ?;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_29_250_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_8_250_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_239_8_250_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 252 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_8_269_8_if_stmt:
+        symbol [ _isThrowing %tmp.50 252 13 24 ];
+        %tmp.50 = getv ? :_isThrowing;
+        %tmp.51 = not %tmp.50;
+        bf %tmp.51 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_8_269_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_8_269_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_26_269_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 253 12 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_stmt:
+        %tmp.52 = lgetv %movementMs2.5;
+        symbol [ movementMs2 %tmp.52 253 16 27 ];
+        symbol [ START_THRESHOLD_MS2 %tmp.54 253 30 49 ];
+        %tmp.54 = getv ? :START_THRESHOLD_MS2;
+        %tmp.55 = gt %tmp.52 %tmp.54;
+        bf %tmp.55 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_51_258_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 254 16 ]
+        symbol [ _startCount %tmp.56 254 16 27 ];
+        %tmp.56 = getv self :_startCount;
+        %tmp.57 = 1;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        symbol [ _startCount ? 254 16 27 ];
+        putv self :_startCount dup %tmp.58;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 255 16 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_16_257_16_if_stmt:
+        %tmp.59 = lgetv %totalG.4;
+        symbol [ totalG %tmp.59 255 20 26 ];
+        symbol [ _candidatePeakG %tmp.61 255 29 44 ];
+        %tmp.61 = getv ? :_candidatePeakG;
+        %tmp.62 = gt %tmp.59 %tmp.61;
+        bf %tmp.62 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_16_257_16_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_16_257_16_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_46_257_16_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 256 20 ]
+        %tmp.63 = lgetv %totalG.4;
+        symbol [ totalG %tmp.63 256 38 44 ];
+        symbol [ _candidatePeakG ? 256 20 35 ];
+        putv self :_candidatePeakG %tmp.63;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_46_257_16_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_16_257_16_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_255_16_257_16_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_51_258_12_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_else_false:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_258_19_261_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 259 16 ]
+        %tmp.64 = 0;
+        symbol [ _startCount ? 259 16 27 ];
+        putv self :_startCount %tmp.64;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 260 16 ]
+        %tmp.65 = 0.0;
+        symbol [ _candidatePeakG ? 260 16 31 ];
+        putv self :_candidatePeakG %tmp.65;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_258_19_261_12_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_253_12_261_12_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 262 12 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_12_267_12_if_stmt:
+        symbol [ _startCount %tmp.67 262 16 27 ];
+        %tmp.67 = getv ? :_startCount;
+        symbol [ _startSamples %tmp.69 262 31 44 ];
+        %tmp.69 = getv ? :_startSamples;
+        %tmp.70 = gte %tmp.67 %tmp.69;
+        bf %tmp.70 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_12_267_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_12_267_12_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_46_267_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 263 16 ]
+        %tmp.71 = true;
+        symbol [ _isThrowing ? 263 16 27 ];
+        putv self :_isThrowing %tmp.71;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 264 16 ]
+        symbol [ _candidatePeakG %tmp.73 264 37 52 ];
+        %tmp.73 = getv ? :_candidatePeakG;
+        symbol [ _peakAccelerationG ? 264 16 34 ];
+        putv self :_peakAccelerationG %tmp.73;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 265 16 ]
+        symbol [ _startCount %tmp.75 265 36 47 ];
+        %tmp.75 = getv ? :_startCount;
+        symbol [ _throwSampleCount ? 265 16 33 ];
+        putv self :_throwSampleCount %tmp.75;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 266 16 ]
+        %tmp.76 = 0;
+        symbol [ _endCount ? 266 16 25 ];
+        putv self :_endCount %tmp.76;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_46_267_12_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_12_267_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_262_12_267_12_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 268 12 ]
+        ret ?;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_26_269_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_8_269_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_252_8_269_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 271 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_8_273_8_if_stmt:
+        %tmp.77 = lgetv %totalG.4;
+        symbol [ totalG %tmp.77 271 12 18 ];
+        symbol [ _peakAccelerationG %tmp.79 271 21 39 ];
+        %tmp.79 = getv ? :_peakAccelerationG;
+        %tmp.80 = gt %tmp.77 %tmp.79;
+        bf %tmp.80 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_8_273_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_8_273_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_41_273_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 272 12 ]
+        %tmp.81 = lgetv %totalG.4;
+        symbol [ totalG %tmp.81 272 33 39 ];
+        symbol [ _peakAccelerationG ? 272 12 30 ];
+        putv self :_peakAccelerationG %tmp.81;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_41_273_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_8_273_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_271_8_273_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 274 8 ]
+        symbol [ _throwSampleCount %tmp.82 274 8 25 ];
+        %tmp.82 = getv self :_throwSampleCount;
+        %tmp.83 = 1;
+        %tmp.84 = add %tmp.82 %tmp.83;
+        symbol [ _throwSampleCount ? 274 8 25 ];
+        putv self :_throwSampleCount dup %tmp.84;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 275 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_stmt:
+        %tmp.85 = lgetv %movementMs2.5;
+        symbol [ movementMs2 %tmp.85 275 12 23 ];
+        symbol [ END_THRESHOLD_MS2 %tmp.87 275 26 43 ];
+        %tmp.87 = getv ? :END_THRESHOLD_MS2;
+        %tmp.88 = lt %tmp.85 %tmp.87;
+        bf %tmp.88 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_45_277_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 276 12 ]
+        symbol [ _endCount %tmp.89 276 12 21 ];
+        %tmp.89 = getv self :_endCount;
+        %tmp.90 = 1;
+        %tmp.91 = add %tmp.89 %tmp.90;
+        symbol [ _endCount ? 276 12 21 ];
+        putv self :_endCount dup %tmp.91;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_45_277_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_else_false:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_277_15_279_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 278 12 ]
+        %tmp.92 = 0;
+        symbol [ _endCount ? 278 12 21 ];
+        putv self :_endCount %tmp.92;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_277_15_279_8_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_275_8_279_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 281 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_stmt:
+        symbol [ _endCount %tmp.94 281 12 21 ];
+        %tmp.94 = getv ? :_endCount;
+        symbol [ _endSamples %tmp.96 281 25 36 ];
+        %tmp.96 = getv ? :_endSamples;
+        %tmp.97 = gte %tmp.94 %tmp.96;
+        bf %tmp.97 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_38_283_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 282 12 ]
+        %tmp.98 = self;
+        symbol [ _finishThrow %tmp.99 282 12 24 ];
+        %tmp.99 = getv function %tmp.98 :_finishThrow;
+        invoke %tmp.98 %tmp.99();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_38_283_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_false:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 283 15 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_15_286_8_if_stmt:
+        symbol [ _throwSampleCount %tmp.101 283 19 36 ];
+        %tmp.101 = getv ? :_throwSampleCount;
+        symbol [ _maxThrowSamples %tmp.103 283 40 56 ];
+        %tmp.103 = getv ? :_maxThrowSamples;
+        %tmp.104 = gte %tmp.101 %tmp.103;
+        bf %tmp.104 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_15_286_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_15_286_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_58_286_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 284 12 ]
+        %tmp.105 = self;
+        symbol [ _finishThrow %tmp.106 284 12 24 ];
+        %tmp.106 = getv function %tmp.105 :_finishThrow;
+        invoke %tmp.105 %tmp.106();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 285 12 ]
+        %tmp.107 = true;
+        symbol [ _waitingForRest ? 285 12 27 ];
+        putv self :_waitingForRest %tmp.107;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_58_286_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_15_286_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_283_15_286_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_281_8_286_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_230_75_287_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 289; @symbol_functiondef = [_estimateKmh,289,13,25]; @symbol_param<0> = [peakG,289,26,31]; @symbol_param<0>_type<0> = [Float,289,35,40]; @symbol_return<0> = [Float,289,45,50]; ]
+    function _estimateKmh(peakG as Float) as Float {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_289_51_297_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 290 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_8_292_8_if_stmt:
+        %tmp.1 = lgetv %peakG;
+        symbol [ peakG %tmp.1 290 12 17 ];
+        %tmp.2 = 0.0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_8_292_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_8_292_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_26_292_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 291 12 ]
+        %tmp.4 = 0.0;
+        ret %tmp.4;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_26_292_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_8_292_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_290_8_292_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 294 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_289_51_297_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_289_51_297_4_stop" ]
+        %speedMs.1 = local;
+        symbol [ speedMs %speedMs.1 294 12 19 ];
+        symbol [ BASE_INTERCEPT_MS %tmp.6 294 22 39 ];
+        %tmp.6 = getv ? :BASE_INTERCEPT_MS;
+        symbol [ BASE_LOG_PEAK_COEFFICIENT %tmp.8 294 42 67 ];
+        %tmp.8 = getv ? :BASE_LOG_PEAK_COEFFICIENT;
+        symbol [ Math %tmp.9 294 70 74 ];
+        %tmp.9 = getm $.Toybox.Math;
+        symbol [ log %tmp.10 294 75 78 ];
+        %tmp.10 = getv function %tmp.9 :log;
+        %tmp.11 = lgetv %peakG;
+        symbol [ peakG %tmp.11 294 79 84 ];
+        %tmp.12 = 2.718281828;
+        %tmp.13 = invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12);
+        %tmp.14 = mul %tmp.8 %tmp.13;
+        %tmp.15 = add %tmp.6 %tmp.14;
+        lputv %speedMs.1 %tmp.15;
+        symbol [ speedMs %speedMs.1 294 12 19 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 296 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_begin:
+        %tmp.16 = lgetv %speedMs.1;
+        symbol [ speedMs %tmp.16 296 15 22 ];
+        %tmp.17 = 0.0;
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_true:
+        %tmp.19 = lgetv %speedMs.1;
+        symbol [ speedMs %tmp.19 296 31 38 ];
+        %tmp.20 = 3.6;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        push %tmp.21;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_else_false:
+        %tmp.22 = 0.0;
+        push %tmp.22;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_end:
+        %tmp.23 = phi [%tmp.18 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_begin] [%tmp.21 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_true] [%tmp.22 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_else_false] [%tmp.23 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_296_15_296_47_end];
+        ret %tmp.23;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_289_51_297_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 299; @symbol_functiondef = [_finishThrow,299,13,25]; ]
+    function _finishThrow() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 300 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_stop" ]
+        %peakG.1 = local;
+        symbol [ peakG %peakG.1 300 12 17 ];
+        symbol [ _peakAccelerationG %tmp.2 300 20 38 ];
+        %tmp.2 = getv ? :_peakAccelerationG;
+        lputv %peakG.1 %tmp.2;
+        symbol [ peakG %peakG.1 300 12 17 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 301 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_stop" ]
+        %resultKmh.2 = local;
+        symbol [ resultKmh %resultKmh.2 301 12 21 ];
+        %tmp.3 = self;
+        symbol [ _estimateKmh %tmp.4 301 24 36 ];
+        %tmp.4 = getv function %tmp.3 :_estimateKmh;
+        %tmp.5 = lgetv %peakG.1;
+        symbol [ peakG %tmp.5 301 37 42 ];
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %resultKmh.2 %tmp.6;
+        symbol [ resultKmh %resultKmh.2 301 12 21 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 302 8 ]
+        %tmp.7 = self;
+        symbol [ _resetDetection %tmp.8 302 8 23 ];
+        %tmp.8 = getv function %tmp.7 :_resetDetection;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 303 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_8_305_8_if_stmt:
+        %tmp.9 = lgetv %resultKmh.2;
+        symbol [ resultKmh %tmp.9 303 12 21 ];
+        %tmp.10 = 0.0;
+        %tmp.11 = lte %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_8_305_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_8_305_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_30_305_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 304 12 ]
+        ret ?;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_30_305_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_8_305_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_303_8_305_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 306 8 ]
+        %tmp.12 = lgetv %resultKmh.2;
+        symbol [ resultKmh %tmp.12 306 24 33 ];
+        symbol [ _lastThrowKmh ? 306 8 21 ];
+        putv self :_lastThrowKmh %tmp.12;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 307 8 ]
+        %tmp.13 = lgetv %resultKmh.2;
+        symbol [ resultKmh %tmp.13 307 24 33 ];
+        %tmp.14 = 1.609344;
+        %tmp.15 = div %tmp.13 %tmp.14;
+        symbol [ _lastThrowMph ? 307 8 21 ];
+        putv self :_lastThrowMph %tmp.15;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 308 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_8_310_8_if_stmt:
+        symbol [ _lastThrowKmh %tmp.17 308 12 25 ];
+        %tmp.17 = getv ? :_lastThrowKmh;
+        symbol [ _maxThrowKmh %tmp.19 308 28 40 ];
+        %tmp.19 = getv ? :_maxThrowKmh;
+        %tmp.20 = gt %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_8_310_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_8_310_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_42_310_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 309 12 ]
+        symbol [ _lastThrowKmh %tmp.22 309 27 40 ];
+        %tmp.22 = getv ? :_lastThrowKmh;
+        symbol [ _maxThrowKmh ? 309 12 24 ];
+        putv self :_maxThrowKmh %tmp.22;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_42_310_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_8_310_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_308_8_310_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 311 8 ]
+        symbol [ _lastThrows %tmp.24 311 8 19 ];
+        %tmp.24 = getv ? :_lastThrows;
+        symbol [ add %tmp.25 311 20 23 ];
+        %tmp.25 = getv function %tmp.24 :add;
+        symbol [ _lastThrowKmh %tmp.27 311 24 37 ];
+        %tmp.27 = getv ? :_lastThrowKmh;
+        invoke %tmp.24 %tmp.25(%tmp.27);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 312 8 ]
+        while @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_test @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_test:
+        symbol [ _lastThrows %tmp.29 312 15 26 ];
+        %tmp.29 = getv ? :_lastThrows;
+        symbol [ size %tmp.30 312 27 31 ];
+        %tmp.30 = getv function %tmp.29 :size;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = 5;
+        %tmp.33 = gt %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_begin:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_39_314_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 313 12 ]
+        symbol [ _lastThrows %tmp.35 313 26 37 ];
+        %tmp.35 = getv ? :_lastThrows;
+        symbol [ slice %tmp.36 313 38 43 ];
+        %tmp.36 = getv function %tmp.35 :slice;
+        %tmp.37 = 1;
+        symbol [ _lastThrows %tmp.39 313 47 58 ];
+        %tmp.39 = getv ? :_lastThrows;
+        symbol [ size %tmp.40 313 59 63 ];
+        %tmp.40 = getv function %tmp.39 :size;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        %tmp.42 = invoke %tmp.35 %tmp.36(%tmp.37, %tmp.41);
+        symbol [ _lastThrows ? 313 12 23 ];
+        putv self :_lastThrows %tmp.42;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_39_314_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_test;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_312_8_314_8_while_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 315 8 ]
+        symbol [ System %tmp.43 315 8 14 ];
+        %tmp.43 = getm $.Toybox.System;
+        symbol [ println %tmp.44 315 15 22 ];
+        %tmp.44 = getv function %tmp.43 :println;
+        %tmp.45 = "Base model result: peak=";
+        %tmp.46 = lgetv %peakG.1;
+        symbol [ peakG %tmp.46 315 52 57 ];
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = " g, rate=";
+        %tmp.49 = add %tmp.47 %tmp.48;
+        symbol [ _sampleRateHz %tmp.51 316 12 25 ];
+        %tmp.51 = getv ? :_sampleRateHz;
+        %tmp.52 = add %tmp.49 %tmp.51;
+        %tmp.53 = " Hz, estimate=";
+        %tmp.54 = add %tmp.52 %tmp.53;
+        %tmp.55 = lgetv %resultKmh.2;
+        symbol [ resultKmh %tmp.55 316 47 56 ];
+        %tmp.56 = add %tmp.54 %tmp.55;
+        %tmp.57 = " km/h";
+        %tmp.58 = add %tmp.56 %tmp.57;
+        invoke %tmp.43 %tmp.44(%tmp.58);
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 317 8 ]
+        symbol [ WatchUi %tmp.59 317 8 15 ];
+        %tmp.59 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.60 317 16 29 ];
+        %tmp.60 = getv function %tmp.59 :requestUpdate;
+        invoke %tmp.59 %tmp.60();
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_299_36_318_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 320; @symbol_functiondef = [_resetDetection,320,13,28]; ]
+    function _resetDetection() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_320_39_328_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 321 8 ]
+        %tmp.1 = false;
+        symbol [ _isThrowing ? 321 8 19 ];
+        putv self :_isThrowing %tmp.1;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 322 8 ]
+        %tmp.2 = 0.0;
+        symbol [ _peakAccelerationG ? 322 8 26 ];
+        putv self :_peakAccelerationG %tmp.2;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 323 8 ]
+        %tmp.3 = 0.0;
+        symbol [ _candidatePeakG ? 323 8 23 ];
+        putv self :_candidatePeakG %tmp.3;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 324 8 ]
+        %tmp.4 = 0;
+        symbol [ _throwSampleCount ? 324 8 25 ];
+        putv self :_throwSampleCount %tmp.4;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 325 8 ]
+        %tmp.5 = 0;
+        symbol [ _startCount ? 325 8 19 ];
+        putv self :_startCount %tmp.5;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 326 8 ]
+        %tmp.6 = 0;
+        symbol [ _endCount ? 326 8 17 ];
+        putv self :_endCount %tmp.6;
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 327 8 ]
+        %tmp.7 = false;
+        symbol [ _waitingForRest ? 327 8 23 ];
+        putv self :_waitingForRest %tmp.7;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_320_39_328_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 330; @symbol_functiondef = [_getDisplayKmh,330,13,27]; @symbol_return<0> = [Float,330,33,38]; ]
+    function _getDisplayKmh() as Float {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_330_39_332_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 331 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_begin:
+        symbol [ _isThrowing %tmp.2 331 15 26 ];
+        %tmp.2 = getv ? :_isThrowing;
+        bf %tmp.2 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_else_false;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_true:
+        %tmp.3 = self;
+        symbol [ _estimateKmh %tmp.4 331 29 41 ];
+        %tmp.4 = getv function %tmp.3 :_estimateKmh;
+        symbol [ _peakAccelerationG %tmp.6 331 42 60 ];
+        %tmp.6 = getv ? :_peakAccelerationG;
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.6);
+        push %tmp.7;
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_else_false:
+        symbol [ _lastThrowKmh %tmp.9 331 64 77 ];
+        %tmp.9 = getv ? :_lastThrowKmh;
+        push %tmp.9;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_end:
+        %tmp.10 = phi [%tmp.2 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_begin] [%tmp.7 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_true] [%tmp.9 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_else_false] [%tmp.10 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_331_15_331_64_end];
+        ret %tmp.10;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_330_39_332_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 334; @symbol_functiondef = [_updateResetMessageState,334,13,37]; ]
+    function _updateResetMessageState() as Void {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_334_48_338_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 335 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_stmt:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_12_335_54_begin:
+        symbol [ _showResetMessage %tmp.2 335 12 29 ];
+        %tmp.2 = getv ? :_showResetMessage;
+        bf %tmp.2 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_33_335_54_true:
+        symbol [ System %tmp.3 335 33 39 ];
+        %tmp.3 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.4 335 40 48 ];
+        %tmp.4 = getv function %tmp.3 :getTimer;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        symbol [ _resetMessageUntilMs %tmp.7 335 54 74 ];
+        %tmp.7 = getv ? :_resetMessageUntilMs;
+        %tmp.8 = gte %tmp.5 %tmp.7;
+        push %tmp.8;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_33_335_54_end:
+        %tmp.9 = phi [%tmp.2 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_12_335_54_begin] [%tmp.8 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_33_335_54_true] [%tmp.9 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_33_335_54_end];
+        bf %tmp.9 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_76_337_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 336 12 ]
+        %tmp.10 = false;
+        symbol [ _showResetMessage ? 336 12 29 ];
+        putv self :_showResetMessage %tmp.10;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_76_337_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_335_8_337_8_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_334_48_338_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 340; @symbol_functiondef = [_formatOneDecimal,340,13,30]; @symbol_param<0> = [value,340,31,36]; @symbol_param<0>_type<0> = [Float,340,40,45]; @symbol_return<0> = [String,340,50,56]; ]
+    function _formatOneDecimal(value as Float) as String {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_340_57_342_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 341 8 ]
+        %tmp.1 = lgetv %value;
+        symbol [ value %tmp.1 341 15 20 ];
+        symbol [ format %tmp.2 341 21 27 ];
+        %tmp.2 = getv function %tmp.1 :format;
+        %tmp.3 = "%.1f";
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        ret %tmp.4;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_340_57_342_4_stop:
+    }
+    [ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 344; @symbol_functiondef = [_formatHistory,344,13,27]; @symbol_param<0> = [start,344,28,33]; @symbol_param<0>_type<0> = [Number,344,37,43]; @symbol_param<1> = [end,344,45,48]; @symbol_param<1>_type<0> = [Number,344,52,58]; @symbol_return<0> = [String,344,63,69]; ]
+    function _formatHistory(start as Number, end as Number) as String {
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_344_70_357_4_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 345 8 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_8_347_8_if_stmt:
+        symbol [ _lastThrows %tmp.2 345 12 23 ];
+        %tmp.2 = getv ? :_lastThrows;
+        symbol [ size %tmp.3 345 24 28 ];
+        %tmp.3 = getv function %tmp.2 :size;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = 0;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_8_347_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_8_347_8_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_37_347_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 346 12 ]
+        %tmp.7 = "-";
+        ret %tmp.7;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_37_347_8_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_8_347_8_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_345_8_347_8_if_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 349 8 ]
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_344_70_357_4_start" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_344_70_357_4_stop" ]
+        %output.1 = local;
+        symbol [ output %output.1 349 12 18 ];
+        %tmp.8 = "";
+        lputv %output.1 %tmp.8;
+        symbol [ output %output.1 349 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 350 8 ]
+        for @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_test @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_incr @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_init:
+        [ "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_begin" "_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 350 17 18 ];
+        %tmp.9 = lgetv %start;
+        symbol [ start %tmp.9 350 21 26 ];
+        lputv %i.2 %tmp.9;
+        symbol [ i %i.2 350 17 18 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_test:
+        %tmp.10 = lgetv %i.2;
+        symbol [ i %tmp.10 350 28 29 ];
+        %tmp.11 = lgetv %end;
+        symbol [ end %tmp.11 350 32 35 ];
+        %tmp.12 = lt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_begin:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_45_355_8_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 351 12 ]
+        %tmp.13 = lgetv %output.1;
+        symbol [ output %tmp.13 351 12 18 ];
+        symbol [ _lastThrows %tmp.15 351 22 33 ];
+        %tmp.15 = getv ? :_lastThrows;
+        %tmp.16 = lgetv %i.2;
+        symbol [ i %tmp.16 351 34 35 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        symbol [ format %tmp.18 351 37 43 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%.0f";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        %tmp.21 = add %tmp.13 %tmp.20;
+        lputv %output.1 %tmp.21;
+        symbol [ output %output.1 351 12 18 ];
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 352 12 ]
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_12_354_12_if_stmt:
+        %tmp.22 = lgetv %i.2;
+        symbol [ i %tmp.22 352 16 17 ];
+        %tmp.23 = lgetv %end;
+        symbol [ end %tmp.23 352 20 23 ];
+        %tmp.24 = 1;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = lt %tmp.22 %tmp.25;
+        bf %tmp.26 @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_12_354_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_12_354_12_if_true:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_29_354_12_start:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 353 16 ]
+        %tmp.27 = lgetv %output.1;
+        symbol [ output %tmp.27 353 16 22 ];
+        %tmp.28 = "  ";
+        %tmp.29 = add %tmp.27 %tmp.28;
+        lputv %output.1 %tmp.29;
+        symbol [ output %output.1 353 16 22 ];
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_29_354_12_stop:
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_12_354_12_if_end;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_352_12_354_12_if_end:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_45_355_8_stop:
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_incr:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 350 ]
+        %tmp.30 = lgetv %i.2;
+        symbol [ i %tmp.30 350 37 38 ];
+        %tmp.31 = 1;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        lputv %i.2 %tmp.32;
+        symbol [ i %i.2 350 37 38 ];
+        goto @_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_test;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_350_8_355_8_for_end:
+[ "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc" 356 8 ]
+        %tmp.33 = lgetv %output.1;
+        symbol [ output %tmp.33 356 15 21 ];
+        ret %tmp.33;
+_Users_reuben_Documents_GitHub_connect_swing_speed_app_source_ThrowVelocityView_mc_344_70_357_4_stop:
+    }
+}
+[ @file = "/Users/reuben/Documents/GitHub/connect-swing-speed-app/source/ThrowVelocityView.mc"; @line = 1; ]
+<init> {
+}

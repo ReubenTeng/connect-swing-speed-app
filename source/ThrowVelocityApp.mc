@@ -8,7 +8,8 @@ class ThrowVelocityApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        return [ new ThrowVelocityView(), new ThrowVelocityDelegate() ];
+        var view = new ThrowVelocityView();
+        return [ view, new ThrowVelocityDelegate(view) ];
     }
 }
 

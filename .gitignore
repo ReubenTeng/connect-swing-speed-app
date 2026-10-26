@@ -2,6 +2,15 @@
 bin/
 build/
 derived/
+gen/
+internal-mir/
+mir/
+*.prg
+*.prg.debug.xml
+
+# Local signing keys
+developer_key
+developer_key.*
 
 # IDE / OS
 .vscode/

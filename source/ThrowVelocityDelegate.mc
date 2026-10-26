@@ -1,18 +1,17 @@
 using Toybox.WatchUi;
+import Toybox.Lang;
 
 class ThrowVelocityDelegate extends WatchUi.InputDelegate {
 
-    function initialize() {
+    var _view as ThrowVelocityView;
+
+    function initialize(view as ThrowVelocityView) {
         InputDelegate.initialize();
+        _view = view;
     }
 
     function onSelect() as Boolean {
-        var view = WatchUi.getCurrentView();
-        if (view != null && view has :resetStats) {
-            view.resetStats();
-            return true;
-        }
-
-        return false;
+        _view.resetStats();
+        return true;
     }
 }
