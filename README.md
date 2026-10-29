@@ -1,5 +1,10 @@
 # Throw Velocity Connect IQ App
 
+## Problem
+As a casual dodgeball player, I want to know if my throw speed is increasing based on form. However, I don't have access to a radar gun consistently. I do however own a Garmin watch, which has an accelerometer.
+
+## Solution
+
 A Garmin Connect IQ activity app (Monkey C) that estimates throwing velocity from accelerometer data.
 
 ## Features
