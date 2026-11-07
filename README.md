@@ -18,7 +18,7 @@ A Garmin Connect IQ activity app (Monkey C) that estimates throwing velocity fro
 - Ends a measurement after a return to rest or a two-second limit.
 - Marks the output as experimental. Also shows sensor waiting, measuring, and error states.
 - Stores and displays the latest 5 throws plus session max.
-- Reset all stats with **SELECT**.
+- Press **START/SELECT** (the upper-right button) to reset the displayed speed, session max, and last 5 throws. This also cancels the current measurement and shows **RESET** for one second.
 
 ## Files
 
